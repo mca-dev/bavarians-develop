@@ -1,5 +1,27 @@
 # AI Chatbot Setup Guide
 
+## IMPORTANT: Database Schema Required
+
+**Before the application can start with chatbot features, you must run the database schema:**
+
+```bash
+# Connect to the PostgreSQL database
+psql -h 57.128.201.126 -U bavuser -d bavarians
+
+# Run the schema file
+\i src/main/resources/db/chatbot_schema.sql
+
+# Or run it directly
+psql -h 57.128.201.126 -U bavuser -d bavarians -f src/main/resources/db/chatbot_schema.sql
+```
+
+This creates the required tables:
+- `chat_session` - stores conversation sessions
+- `system_configuration` - stores chatbot settings
+- `intercars_cache` - for Inter Cars API caching (Phase 3)
+
+---
+
 ## Phase 1: Ollama Infrastructure (Completed)
 
 ### Deployed Resources
