@@ -1,3 +1,4 @@
+
 # Postgres 13 dump
 docker run postgres:13.10 pg_dump "host=57.128.201.126 port=5432 dbname=bavarians user=bavuser password=1234567890" > /Users/magdalenaciezka/deployments/bav2024/ovh_backup_$(date +"%F").dump
 # Postgres restore
