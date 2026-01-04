@@ -50,8 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/css/**", "/img/**").permitAll()
+                .antMatchers("/css/**", "/img/**", "/js/**").permitAll()
                 .antMatchers("/api/auth/authenticate", "/api/auth/register").permitAll()
+                .antMatchers("/api/chatbot/**").authenticated()
                 .antMatchers("/klienci/**").hasRole("ADMIN")
                 .antMatchers("/plot/**").hasRole("ADMIN")
                 .antMatchers("/admin/**").hasRole("ADMIN")

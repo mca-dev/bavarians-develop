@@ -10,8 +10,20 @@ docker exec some-postgres psql -U bavuser -d bavarians -c "\dt"
 # chatbot schema restore
 docker cp src/main/resources/db/chatbot_schema.sql some-postgres:/tmp/chatbot_schema.sql
 docker exec -it some-postgres psql -U bavuser -d bavarians -f /tmp/chatbot_schema.sql
+# Apply database schema to production
+psql -h 57.128.201.126 -U bavuser -d bavarians -f src/main/resources/db/chatbot_schema.sql
+# Or to local Docker database
+docker exec -i $(docker ps -qf "ancestor=postgres") psql -U bavuser -d bavarians < src/main/resources/db/chatbot_schema.sql
 
 
+
+# k3s commands
+sudo k3s kubectl get pods -n bavarians-prod -w
+sudo k3s kubectl get svc -n bavarians-prod
+sudo k3s kubectl get pvc -n bavarians-prod
+sudo k3s kubectl logs deployment/bavarians-app -n bavarians-prod --tail=200
+sudo k3s kubectl logs deployment/bavarians-app -n bavarians-prod --tail=200
+sudo k3s kubectl logs deployment/ollama-deployment -n o --tail=100
 
 # Running PostgreSQL 18 with Docker
 docker run -d --name some-postgres -e POSTGRES_PASSWORD=1234567890 -p 5432:5432 postgres

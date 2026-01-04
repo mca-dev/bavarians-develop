@@ -43,6 +43,9 @@ public class ChatbotServiceImpl implements ChatbotService {
     @Autowired
     private OfertaService ofertaService;
 
+    @Autowired
+    private VehicleContextService vehicleContextService;
+
     @Value("${chatbot.session.timeout.minutes:30}")
     private int sessionTimeoutMinutes;
 
@@ -70,9 +73,15 @@ public class ChatbotServiceImpl implements ChatbotService {
             // Get conversation history
             String conversationHistory = session.getConversationJson();
 
-            // Send to Ollama
+            // Get vehicle and service history context from database (RAG)
+            String databaseContext = vehicleContextService.getContextForMessage(
+                    messageDTO.getMessage(),
+                    session.getVehicleId()
+            );
+
+            // Send to Ollama with database context
             String systemPrompt = ollamaService.getSystemPrompt();
-            String ollamaResponse = ollamaService.sendPrompt(systemPrompt, messageDTO.getMessage(), conversationHistory);
+            String ollamaResponse = ollamaService.sendPrompt(systemPrompt, messageDTO.getMessage(), conversationHistory, databaseContext);
 
             if (ollamaResponse == null || ollamaResponse.isEmpty()) {
                 response.setErrorMessage("Nie udało się uzyskać odpowiedzi od asystenta. Spróbuj ponownie.");

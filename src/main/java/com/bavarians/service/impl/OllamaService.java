@@ -31,13 +31,25 @@ public class OllamaService {
     }
 
     /**
-     * Send a prompt to Ollama and get a response
+     * Send a prompt to Ollama and get a response (backward compatible version)
      * @param systemPrompt The system prompt (instructions for the model)
      * @param userMessage The user's message
      * @param conversationHistory Optional conversation history JSON
      * @return The model's response text
      */
     public String sendPrompt(String systemPrompt, String userMessage, String conversationHistory) {
+        return sendPrompt(systemPrompt, userMessage, conversationHistory, null);
+    }
+
+    /**
+     * Send a prompt to Ollama and get a response with database context (RAG)
+     * @param systemPrompt The system prompt (instructions for the model)
+     * @param userMessage The user's message
+     * @param conversationHistory Optional conversation history JSON
+     * @param databaseContext Optional context from database (RAG)
+     * @return The model's response text
+     */
+    public String sendPrompt(String systemPrompt, String userMessage, String conversationHistory, String databaseContext) {
         try {
             String url = ollamaBaseUrl + "/api/generate";
 
@@ -48,6 +60,13 @@ public class OllamaService {
             // Build the prompt
             StringBuilder promptBuilder = new StringBuilder();
             promptBuilder.append("System: ").append(systemPrompt).append("\n\n");
+
+            // Add database context for RAG (Retrieval-Augmented Generation)
+            if (databaseContext != null && !databaseContext.isEmpty()) {
+                promptBuilder.append("KONTEKST Z BAZY DANYCH:\n");
+                promptBuilder.append(databaseContext).append("\n\n");
+                promptBuilder.append("Wykorzystaj powyższe informacje z bazy danych, aby lepiej zrozumieć kontekst i udzielić precyzyjnej odpowiedzi.\n\n");
+            }
 
             if (conversationHistory != null && !conversationHistory.isEmpty()) {
                 promptBuilder.append("Historia konwersacji:\n").append(conversationHistory).append("\n\n");
@@ -101,11 +120,16 @@ public class OllamaService {
     public String getSystemPrompt() {
         return "Jesteś asystentem warsztatowym dla serwisu samochodowego. " +
                 "Pomagasz użytkownikom w tworzeniu ofert serwisowych na podstawie naturalnego języka. " +
-                "\n\nTwoim zadaniem jest:\n" +
-                "1. Zrozumieć, jaką usługę chce wykonać użytkownik (np. wymiana oleju, naprawa hamulców)\n" +
-                "2. Zebrać informacje o pojeździe (marka, model, VIN jeśli dostępny)\n" +
-                "3. Określić potrzebne części i robociznę\n" +
-                "4. Zadawać pytania doprecyzowujące jeśli czegoś brakuje\n" +
+                "\n\nMasz dostęp do KONTEKSTU Z BAZY DANYCH zawierającego:\n" +
+                "- Informacje o pojazdach zarejestrowanych w systemie (marka, model, VIN, przebieg)\n" +
+                "- Historię serwisową pojazdów (wcześniejsze naprawy i usługi)\n" +
+                "- Popularne usługi i ich typowe ceny\n" +
+                "\nTwoim zadaniem jest:\n" +
+                "1. WYKORZYSTAĆ informacje z kontekstu bazy danych, jeśli są dostępne\n" +
+                "2. Zrozumieć, jaką usługę chce wykonać użytkownik (np. wymiana oleju, naprawa hamulców)\n" +
+                "3. Zebrać informacje o pojeździe (marka, model, VIN jeśli dostępny)\n" +
+                "4. Określić potrzebne części i robociznę (bazując na historii i popularnych usługach)\n" +
+                "5. Zadawać pytania doprecyzowujące jeśli czegoś brakuje\n" +
                 "\nODPOWIADAJ ZAWSZE W FORMACIE JSON:\n" +
                 "{\n" +
                 "  \"intent\": \"create_offer|ask_clarification|confirm_ready\",\n" +
@@ -124,6 +148,9 @@ public class OllamaService {
                 "}\n" +
                 "\nPamiętaj:\n" +
                 "- Używaj polskiego języka\n" +
+                "- WYKORZYSTUJ informacje z kontekstu bazy danych\n" +
+                "- Jeśli znaleziono pojazd w bazie, wykorzystaj jego historię serwisową\n" +
+                "- Bazuj na typowych cenach z wcześniejszych usług\n" +
                 "- Bądź konkretny i precyzyjny\n" +
                 "- Zawsze zwracaj poprawny JSON\n" +
                 "- Jeśli nie masz wszystkich informacji, zapytaj użytkownika";
