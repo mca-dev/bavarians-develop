@@ -30,5 +30,13 @@
 <!--<script src="/js/main.js"></script>-->
 <script src="/js/add_middle_field.js"></script>
 <!--<script src="/js/drag_drop.js"></script>-->
+
+<!-- AI Chatbot (only for authenticated users) -->
+<div sec:authorize="isAuthenticated()">
+    <div th:replace="fragments/chatbot-modal :: chatbot-button"></div>
+    <div th:replace="fragments/chatbot-modal :: chatbot-modal"></div>
+    <script src="/js/chatbot.js"></script>
+</div>
+
 </body>
 </html>

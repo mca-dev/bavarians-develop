@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Chatbot Floating Button -->
+<div th:fragment="chatbot-button" id="chatbot-floating-button" class="chatbot-floating-btn">
+    <i class="fas fa-robot"></i>
+    <span class="chatbot-btn-text">Asystent AI</span>
+</div>
+
+<!-- Chatbot Modal -->
+<div th:fragment="chatbot-modal" class="modal fade" id="chatbotModal" tabindex="-1" role="dialog" aria-labelledby="chatbotModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content chatbot-modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header chatbot-header">
+                <h5 class="modal-title" id="chatbotModalLabel">
+                    <i class="fas fa-robot mr-2"></i>
+                    Asystent Tworzenia Ofert
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body chatbot-body">
+
+                <!-- Chatbot Status -->
+                <div id="chatbot-status" class="alert alert-info" style="display: none;">
+                    <i class="fas fa-spinner fa-spin mr-2"></i>
+                    <span id="chatbot-status-text">Sprawdzanie dostępności asystenta...</span>
+                </div>
+
+                <!-- Chat Messages Container -->
+                <div id="chatbot-messages" class="chatbot-messages">
+                    <!-- Welcome message -->
+                    <div class="chatbot-message chatbot-assistant">
+                        <div class="chatbot-message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="chatbot-message-content">
+                            <p>Witaj! Jestem asystentem AI. Pomogę Ci stworzyć ofertę serwisową.</p>
+                            <p>Powiedz mi, jaką usługę chcesz wykonać i dla jakiego pojazdu.</p>
+                            <small class="text-muted">Przykład: "Chcę wymienić olej w Audi A4 2015"</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Offer Preview (hidden initially) -->
+                <div id="chatbot-offer-preview" class="chatbot-offer-preview" style="display: none;">
+                    <h6><i class="fas fa-file-invoice mr-2"></i>Podgląd Oferty</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Usługa</th>
+                                    <th>Robocizna</th>
+                                    <th>Części</th>
+                                    <th>Razem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="chatbot-offer-items">
+                                <!-- Items will be inserted here -->
+                            </tbody>
+                            <tfoot>
+                                <tr class="font-weight-bold">
+                                    <td>Suma:</td>
+                                    <td id="chatbot-labor-total">0.00 PLN</td>
+                                    <td id="chatbot-parts-total">0.00 PLN</td>
+                                    <td id="chatbot-grand-total">0.00 PLN</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="button" class="btn btn-success btn-lg" id="chatbot-confirm-btn">
+                            <i class="fas fa-check mr-2"></i>Zatwierdź i Zapisz Ofertę
+                        </button>
+                        <button type="button" class="btn btn-secondary ml-2" id="chatbot-edit-btn">
+                            <i class="fas fa-edit mr-2"></i>Edytuj
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer chatbot-footer">
+                <div class="chatbot-input-group">
+                    <textarea
+                        class="form-control chatbot-input"
+                        id="chatbot-message-input"
+                        rows="2"
+                        placeholder="Wpisz swoją wiadomość..."
+                        maxlength="1000"></textarea>
+                    <button type="button" class="btn btn-primary chatbot-send-btn" id="chatbot-send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span class="ml-2 d-none d-sm-inline">Wyślij</span>
+                    </button>
+                </div>
+                <div class="chatbot-footer-info mt-2">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Możesz opisać problem w naturalny sposób. Asystent zrozumie polską mowę.
+                    </small>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

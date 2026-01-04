@@ -50,3 +50,7 @@ logs/
 
 ### Mac OS ###
 .DS_Store
+
+# Local development files
+.env.local
+run-local-vps.sh
