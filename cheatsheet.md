@@ -7,6 +7,12 @@ docker exec some-postgres psql -U postgres -c "CREATE DATABASE bavarians OWNER b
 docker exec -i some-postgres psql -U bavuser -d bavarians < "/Users/magdalena.dabrowska/Documents/repos/bavarians-develop/src/main/resources/last_dump/ovh_backup_2026-01-03.dump"
 docker exec some-postgres psql -U bavuser -d bavarians -c "\dt"
 
+# chatbot schema restore
+docker cp src/main/resources/db/chatbot_schema.sql some-postgres:/tmp/chatbot_schema.sql
+docker exec -it some-postgres psql -U bavuser -d bavarians -f /tmp/chatbot_schema.sql
+
+
+
 # Running PostgreSQL 18 with Docker
 docker run -d --name some-postgres -e POSTGRES_PASSWORD=1234567890 -p 5432:5432 postgres
 

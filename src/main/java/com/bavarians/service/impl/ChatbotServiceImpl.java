@@ -164,15 +164,20 @@ public class ChatbotServiceImpl implements ChatbotService {
             if (servicesNode != null && servicesNode.isArray()) {
                 for (JsonNode serviceNode : servicesNode) {
                     Element element = new Element();
-                    element.setNazwa(serviceNode.has("name") ? serviceNode.get("name").asText() : "Usługa");
-                    element.setCzesc(serviceNode.has("parts_description") ? serviceNode.get("parts_description").asText() : "");
 
+                    // Build service description (name + parts if available)
+                    String serviceName = serviceNode.has("name") ? serviceNode.get("name").asText() : "Usługa";
+                    String partsDesc = serviceNode.has("parts_description") ? serviceNode.get("parts_description").asText() : "";
+                    String fullDescription = partsDesc.isEmpty() ? serviceName : serviceName + " - " + partsDesc;
+                    element.setNazwa(fullDescription);
+
+                    // Calculate labor cost (hours * rate)
                     double laborHours = serviceNode.has("labor_hours") ? serviceNode.get("labor_hours").asDouble() : 1.0;
-                    element.setIloscGodzinRobocizny(BigDecimal.valueOf(laborHours));
-                    element.setCenaRobocizny(defaultLaborRate);
+                    BigDecimal laborCost = defaultLaborRate.multiply(BigDecimal.valueOf(laborHours));
+                    element.setCenaRobociznyNetto(laborCost);
 
                     // Parts cost will be set by Inter Cars integration in Phase 3
-                    element.setCenaCzesci(BigDecimal.ZERO);
+                    element.setCenaCzesciBrutto(BigDecimal.ZERO);
 
                     elements.add(element);
                 }
@@ -304,8 +309,8 @@ public class ChatbotServiceImpl implements ChatbotService {
             if (pojazdOpt.isPresent()) {
                 Pojazd pojazd = pojazdOpt.get();
                 preview.setVehicleId(pojazd.getId());
-                preview.setVehicleInfo(String.format("%s %s (%s) - %s",
-                        pojazd.getMarka(), pojazd.getModel(), pojazd.getRokProdukcji(), pojazd.getVin()));
+                preview.setVehicleInfo(String.format("%s %s - VIN: %s",
+                        pojazd.getMarka(), pojazd.getModel(), pojazd.getVin() != null ? pojazd.getVin() : "N/A"));
             }
         } else if (extractedData.has("vehicle")) {
             JsonNode vehicleNode = extractedData.get("vehicle");

@@ -13,6 +13,8 @@ psql -h 57.128.201.126 -U bavuser -d bavarians
 
 # Or run it directly
 psql -h 57.128.201.126 -U bavuser -d bavarians -f src/main/resources/db/chatbot_schema.sql
+psql -h localhost -U bavuser -d bavarians -f src/main/resources/db/chatbot_schema.sql
+
 ```
 
 This creates the required tables:
