@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<body>
+<div id="page" layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/pojazdy">Pojazdy</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Nowy</li>
+        </ol>
+    </nav>
+    <form method="POST" class="form-signin" th:object="${pojazdForm}" th:action="@{/pojazdy/dodaj}">
+        <h2 class="form-signin-heading">Utwórz pojazd</h2>
+
+        <div class="form-group">
+            <input type="text" th:field="*{marka}" class="form-control" placeholder="Marka">
+        </div>
+        <div class="form-group">
+            <input type="text" th:field="*{model}" class="form-control" placeholder="Model">
+        </div>
+        <div class="form-group">
+            <input type="text" th:field="*{numerRejestracyjny}" class="form-control" placeholder="Numer Rejestracyjny" autofocus="true">
+        </div>
+        <div class="form-group">
+            <input type="text" th:field="*{vin}" class="form-control" placeholder="VIN">
+        </div>
+        <div class="form-group">
+            <input type="text" th:field="*{przebieg}" class="form-control" placeholder="Przebieg">
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Wyślij</button>
+    </form>
+</div>
+</body>
+</html>

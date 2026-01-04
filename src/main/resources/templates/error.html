@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
+<div id="page" layout:fragment="content">
+    <h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|"> error</h1>
+    <p th:utext="${errorMessage}"> Ops coś poszło nie tak </p>
+    <a href="/login" th:href="@{/login}">Zaloguj się ponownie</a>
+
+</div>
+</body>
+</body>
+</html>
+
+

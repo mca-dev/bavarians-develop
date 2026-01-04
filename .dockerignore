@@ -1,0 +1,40 @@
+# Build artifacts
+target/
+*.jar
+*.war
+*.ear
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# CI/CD
+.github/
+kubernetes/
+
+# Maven wrapper JAR (use the one in the image)
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+logs/
+*.log
+nohup.out
+
+# Database backups and dumps
+*.dump
+last_dump/
+
+# Deployment scripts
+deploy.sh
+backup.sh
+
+# Documentation
+README.md

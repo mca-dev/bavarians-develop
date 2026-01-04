@@ -1,0 +1,35 @@
+scalar Date
+
+type Pojazd {
+    id: ID!
+    vin: String!
+    numerRejestracyjny: String
+    marka: String
+    model: String
+    wlasciciel: Klient
+}
+type Element {
+    id: ID!
+    nazwa: String
+    oferta: Oferta
+}
+type Oferta {
+    id: ID!
+    zrealizowana: Boolean
+    edytowano: Date
+    pojazd: Pojazd
+    elementySerwisowe: [Element!] @relation
+}
+type Klient {
+    id: ID!
+    imie: String!
+    nazwisko: String!
+    email: String!
+    haslo: String!
+    pojazdy: [Pojazd!] @relation
+}
+
+type Query {
+    findAllVehicleRepairs: [Oferta]!
+}
+

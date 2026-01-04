@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bavarians-prod
+  labels:
+    name: bavarians-prod
+    environment: production

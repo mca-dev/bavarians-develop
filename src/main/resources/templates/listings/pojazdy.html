@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<body>
+<div id="page" layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Pojazdy /</li>
+        </ol>
+    </nav>
+
+    <div style="float:right;">
+        <div class="button-wrapper">
+            <a href="/pojazdy/dodaj" role="button">
+                    <span class="button-content-wrapper">
+						<span class="button-text">Nowy pojazd</span>
+		            </span>
+            </a>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead class="thead-primary">
+        <tr>
+            <th>Id</th>
+            <th>Marka</th>
+            <th>Model</th>
+            <th>Numer Rejestracyjny</th>
+<!--            <th>VIN</th>-->
+<!--            <th>Przebieg</th>-->
+            <th>Edycja</th>
+            <th class="hideonphone">Usuwanie</th>
+            <th>Tworzenie oferty</th>
+            <th>Aktualne oferty</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${pojazdy}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.marka}"></td>
+            <td th:text="${item.model}"></td>
+            <td th:text="${item.numerRejestracyjny}"></td>
+<!--            <td th:text="${item.vin}"></td>-->
+<!--            <td th:text="${item.przebieg}"></td>-->
+            <td><a th:href="@{/pojazdy/edytuj/{id}(id=${item.id})}">&#9998;</a></td>
+            <td class="hideonphone"><a class="btn btn-outline-danger" th:href="@{/pojazdy/usun/{id}(id=${item.id})}">&#xd7;</a></td>
+
+            <td><a class="btn btn-outline-info" th:href="@{/pojazdy/nowa-oferta/{pojazdId}(pojazdId=${item.id})}">&#x2795;</a></td>
+            <td>
+                <a th:href="@{/pojazdy/{id}(id=${item.id})}">
+                    <p style="margin:0" th:text="${item.oferty.size}"></p>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>

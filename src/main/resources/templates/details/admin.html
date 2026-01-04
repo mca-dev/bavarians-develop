@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorator="layouts/default" xmlns:ht="http://www.w3.org/1999/xhtml">
+<body>
+<div id="page" layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin">Przychód</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Roczne</li>
+        </ol>
+    </nav>
+    <script th:inline="javascript">
+window.onload = function() {
+/*<![CDATA[*/
+
+    var sumabezvat2023 = /*[[${sumabezvat2023}]]*/ 'default';
+    var sumabezvat2024 = /*[[${sumabezvat2024}]]*/ 'default';
+    var chart1 = new CanvasJS.Chart("chartContainer1", {
+    	animationEnabled: true,
+    	exportEnabled: true,
+    	theme: "light1",
+    	title:{
+    		text: "Przychód (sumaBezVat) 2023/2024"
+    	},
+    	axisY:{
+    	    title: "Przychód sumaBezVat (PLN)",
+    		includeZero: false
+    	},
+        axisX:{
+                title: "Miesiąc",
+                interval: 1
+        },
+    	data: [{
+    		type: "column",
+    		name: "suma bez vat 2023",
+    		showInLegend: true,
+    		dataPoints: []
+    	},
+    	{
+    		type: "column",
+    		name: "suma bez vat 2024",
+    		showInLegend: true,
+    		dataPoints: []
+    	}]
+    });
+    chart1.render();
+
+    /*<![CDATA[*/
+    		chart1.options.data[0].dataPoints = sumabezvat2023;
+    		chart1.options.data[1].dataPoints = sumabezvat2024;
+    		chart1.render();
+    /*]]>*/
+
+    var sumaczescibrutto2024 = /*[[${sumaczescibrutto2024}]]*/ 'default';
+    var sumarobociznanetto2024 = /*[[${sumarobociznanetto2024}]]*/ 'default';
+    var chart2 = new CanvasJS.Chart("chartContainer2", {
+    	animationEnabled: true,
+    	exportEnabled: true,
+    	theme: "light2",
+    	title:{
+    		text: "Suma części / robocizna 2024"
+    	},
+    	axisY:{
+    	    title: "Suma (PLN)",
+    		includeZero: false
+    	},
+        axisX:{
+            title: "Miesiąc",
+            interval: 1
+        },
+        axisY: {
+            title: "Części",
+            titleFontColor: "#4F81BC",
+            lineColor: "#4F81BC",
+            labelFontColor: "#4F81BC",
+            tickColor: "#4F81BC",
+            includeZero: true
+        },
+        axisY2: {
+            title: "Robocizna",
+            titleFontColor: "#C0504E",
+            lineColor: "#C0504E",
+            labelFontColor: "#C0504E",
+            tickColor: "#C0504E",
+            includeZero: true
+        },
+    	data: [{
+    		type: "column",
+    		name: "części",
+    		showInLegend: true,
+    		dataPoints: []
+    	},
+    	{
+    		type: "column",
+    		name: "robocizna",
+    		showInLegend: true,
+    		dataPoints: []
+    	}]
+    });
+    chart2.render();
+
+    /*<![CDATA[*/
+    		chart2.options.data[0].dataPoints = sumaczescibrutto2024;
+    		chart2.options.data[1].dataPoints = sumarobociznanetto2024;
+    		chart2.render();
+    /*]]>*/
+
+}
+
+
+
+
+    </script>
+    <div sec:authorize="isAuthenticated()">
+        <form id="logoutForm" method="POST" th:action="@{/logout}">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+        <div id="chartContainer1" style="height: 370px; width: 100%;"></div>
+        </br> </br> </br>
+        <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+
+        <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+        <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+
+    </div>
+</div>
+</body>
+</html>

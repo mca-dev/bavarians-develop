@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bavarians-app
+  namespace: bavarians-prod
+  labels:
+    app: bavarians
+    version: "3.0.7"
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0  # Zero-downtime deployments
+  selector:
+    matchLabels:
+      app: bavarians
+  template:
+    metadata:
+      labels:
+        app: bavarians
+        version: "3.0.7"
+    spec:
+      containers:
+      - name: bavarians
+        image: ghcr.io/mcieunic/bavarians-develop:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+
+        # Environment variables from ConfigMap and Secret
+        envFrom:
+        - configMapRef:
+            name: bavarians-config
+        - secretRef:
+            name: bavarians-secrets
+
+        # Resource limits (adjust based on VPS capacity)
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+
+        # Liveness probe - restart if unhealthy
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 90
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        # Readiness probe - remove from load balancer if not ready
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+        # Security context
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false  # Spring Boot needs temp dir
+
+      # Pull from GitHub Container Registry
+      imagePullSecrets:
+      - name: github-registry-secret
+
+      # Restart policy
+      restartPolicy: Always

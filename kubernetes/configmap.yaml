@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bavarians-config
+  namespace: bavarians-prod
+data:
+  DB_HOST: "57.128.201.126"
+  DB_PORT: "5432"
+  DB_NAME: "bavarians"
+  SERVER_PORT: "8080"
+  SMTP_HOST: "smtp.cal.pl"
+  SMTP_PORT: "587"

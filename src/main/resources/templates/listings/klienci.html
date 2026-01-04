@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<body>
+<div id="page" layout:fragment="content">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Klienci /</li>
+        </ol>
+    </nav>
+
+    <div style="float:right;">
+        <div class="button-wrapper">
+            <a href="/klienci/dodaj" role="button">
+                    <span class="button-content-wrapper">
+						<span class="button-text">Nowe konto</span>
+		            </span>
+            </a>
+        </div>
+    </div>
+    <table class="table">
+        <thead class="thead-primary">
+        <tr>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Email</th>
+            <th class="hideonphone">Edycja</th>
+            <th class="hideonphone">Usuwanie</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.imie}"></td>
+            <td th:text="${user.nazwisko}"></td>
+            <td th:text="${user.email}"></td>
+            <td class="hideonphone"><a th:href="@{/klienci/edytuj/{id}(id=${user.id})}">&#9998;</a></td>
+            <td class="hideonphone"><a class="btn btn-outline-danger" th:href="@{/klienci/usun/{id}(id=${user.id})}">&#xd7;</a></td>
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>

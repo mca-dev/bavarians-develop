@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default"
+>
+<body>
+<div id="page" layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Szablon email</li>
+        </ol>
+    </nav>
+    <form method="POST" class="form-signin" th:object="${email}" th:action="@{/admin/email/edytuj/{id}(id=${email.id})}">
+        <h2 class="form-signin-heading">h2</h2>
+        <div class="form-group">
+            <input type="text" th:field="*{fromEmail}" class="form-control" placeholder="od"
+                   autofocus="true">
+            <span class="has-error" th:if="${#fields.hasErrors('fromEmail')}" th:errors="*{fromEmail}"></span>
+        </div>
+        <div class="form-group">
+            <input type="text" th:field="*{subject}" class="form-control" placeholder="temat"
+                   autofocus="true">
+            <span class="has-error" th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></span>
+        </div>
+        <div class="form-group">
+            <textarea class="form-control"  rows="15"
+                      name="body"
+                      placeholder="treść" th:field="*{body}"
+                      required="required"></textarea>
+            <span class="has-error" th:if="${#fields.hasErrors('body')}" th:errors="*{body}"></span>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Wyślij</button>
+    </form>
+</div>
+</body>
+</html>

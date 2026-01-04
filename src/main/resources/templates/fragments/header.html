@@ -1,0 +1,55 @@
+<header class="header" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="container">
+        <div class="header-row">
+            <div class="header-image">
+                <a href="/" th:href="@{/}">
+                    <img th:src="@{/img/bavarians-logo.png}" title="bavarians-logo" alt="bavarians-logo">
+                </a>
+            </div>
+            <span sec:authorize="isAuthenticated()">
+                <div class="button-wrapper" style="margin-left: 20px;">
+                    <a href="/oferty/dodaj" role="button">
+                        <span class="button-content-wrapper">
+                            <span class="button-text">Utworz ofertę</span>
+                        </span>
+                    </a>
+                </div>
+                </span>
+            <div sec:authorize="isAuthenticated()" class="navigation" th:fragment="navigation">
+                <a th:class="${klienciActive} ? 'node node-active' : 'node'" href="/klienci" th:href="@{/klienci}">Klienci</a>
+                <a th:class="${pojazdyActive} ? 'node node-active' : 'node'" href="/pojazdy" th:href="@{/pojazdy}">Pojazdy</a>
+                <a th:class="${ofertyActive} ? 'node node-active' : 'node'" href="/oferty" th:href="@{/oferty}">Oferty</a>
+                <a th:class="${adminActive} ? 'node node-active' : 'node'" href="/admin/plot" th:href="@{/admin/plot}">Finanse</a>
+                <a th:class="${adminActive} ? 'node node-active' : 'node'" href="/admin/emails" th:href="@{/admin/emails}">Ustawienia</a>
+
+                <div class="button-wrapper red-button">
+                    <a onclick="document.forms['logoutForm'].submit()">
+                    <span class="button-content-wrapper">
+						<span class="button-text">Wyloguj</span>
+		            </span>
+                    </a>
+                </div>
+            </div>
+
+            <div sec:authorize="!isAuthenticated()" class="navigation" th:fragment="navigation">
+                <div class="button-wrapper">
+                    <a href="/login" role="button">
+                    <span class="button-content-wrapper">
+						<span class="button-text">Zaloguj</span>
+		            </span>
+                    </a>
+                </div>
+                <div class="button-wrapper">
+                    <a href="/registration" role="button">
+                    <span class="button-content-wrapper">
+						<span class="button-text">Zarejestruj</span>
+		            </span>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    </div>
+</header>

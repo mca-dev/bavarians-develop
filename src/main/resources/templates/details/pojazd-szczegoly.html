@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorator="layouts/default" xmlns:ht="http://www.w3.org/1999/xhtml">
+<body>
+<div id="page" layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/pojazdy">Pojazdy</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Szczegóły</li>
+        </ol>
+    </nav>
+    <div style="float:left;">
+        <div class="button-wrapper float-left">
+            <a th:href="@{/pojazdy/nowa-oferta/{pojazdId}(pojazdId=${pojazd.id})}" role="button">
+                    <span class="button-content-wrapper">
+						<span class="button-text">Nowa oferta</span>
+		            </span>
+            </a>
+        </div>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        <form id="logoutForm" method="POST" th:action="@{/logout}">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+
+        <div style="display: flow-root;margin-bottom: 10px;">
+            <div class="float-right ">
+                <a th:href="@{/pojazdy/usun/{id}(id=${pojazd.id})}" role="button">
+                    <span class="button-content-wrapper">
+						<span class="btn btn-outline-danger">Usuń</span>
+		            </span>
+                </a>
+            </div>
+            <div class="button-wrapper float-right">
+                <a th:href="@{/pojazdy/edytuj/{id}(id=${pojazd.id})}" role="button">
+                    <span class="button-content-wrapper">
+						<span class="button-text">Edytuj</span>
+		            </span>
+                </a>
+            </div>
+        </div>
+        <div class="samochod-ramka">
+            <div>
+                Dane pojazdu:
+            </div>
+            <div>
+                <div>
+                    <a th:href="@{/pojazdy/{id}(id=${pojazd.id})}">
+                        <p style="margin:0" th:text="${pojazd.marka + ' ' + pojazd.model + ' ' + pojazd.numerRejestracyjny}"></p>
+                    </a>
+                </div>
+                <div>
+                    VIN <span th:text="${pojazd.vin}"></span>
+                </div>
+                <div>
+                    Przebieg <span th:text="${pojazd.przebieg}"></span>
+                </div>
+
+            </div>
+        </div>
+
+
+        <table class="table">
+            <thead class="thead-primary">
+            <tr>
+                <th width="60%">Oferta Id</th>
+                <th>Ostatnio edytowano</th>
+                <th>Suma netto</th>
+                <th>Suma brutto</th>
+                <!--                <th>Usuń</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${pojazd.oferty}">
+                <td><a th:href="@{/oferty/{id}(id=${item.id})}"> <span th:text="${item.id}"></span> </a></td>
+                <td th:text="${item.edytowano}"></td>
+                <td th:text="${item.sumaBezVat}"></td>
+                <td th:text="${item.suma}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+</body>
+</html>

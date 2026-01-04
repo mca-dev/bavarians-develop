@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorator="layouts/default">
+<body>
+<div id="page" layout:fragment="content">
+    <div sec:authorize="isAuthenticated()">
+        <form id="logoutForm" method="POST" th:action="@{/logout}">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+        <p><a href="/oferty/dodaj">Nowa</a></p>
+
+        <table class="table">
+            <thead class="thead-primary">
+            <tr>
+                <th>Data realizacji</th>
+                <th>Data utworzenia</th>
+                <th>Status</th>
+                <th>Pojazd</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${oferty}">
+                <td th:text="${item.dataRealizacji}"></td>
+                <td th:text="${item.edytowano}"></td>
+                <td th:text="${item.status}"></td>
+                <td th:text="${item.pojazd}"></td>
+                <td><a th:href="@{/oferty/edytuj/{id}(id=${item.id})}">&#9998;</a></td>
+                <td><a th:href="@{/oferty/usun/{id}(id=${item.id})}">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorator="layouts/default" xmlns:ht="http://www.w3.org/1999/xhtml">
+<body>
+<div id="page" layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/oferty">Oferty</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Szczegóły</li>
+        </ol>
+    </nav>
+
+    <div sec:authorize="isAuthenticated()">
+        <form id="logoutForm" method="POST" th:action="@{/logout}">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+        <div class="float-right ">
+            <a th:href="@{/oferty/usun/{id}(id=${oferta.id})}" role="button">
+                    <span class="button-content-wrapper">
+						<span class="btn btn-outline-danger">Usuń</span>
+		            </span>
+            </a>
+        </div>
+        <div class="button-wrapper float-right">
+            <a th:href="@{/oferty/edytuj/{id}(id=${oferta.id})}" role="button">
+                    <span class="button-content-wrapper">
+						<span class="button-text">Edytuj</span>
+		            </span>
+            </a>
+        </div>
+        <div class="button-wrapper float-right">
+            <a th:href="@{/oferty/pdf/{id}(id=${oferta.id})}" role="button">
+                    <span class="button-content-wrapper">
+						<span class="button-text">Generuj PDF</span>
+		            </span>
+            </a>
+<!--            <a th:href="@{/oferty/email/{id}(id=${oferta.id})}" role="button">-->
+<!--                    <span class="button-content-wrapper">-->
+<!--						<span class="button-text">Wyślij email</span>-->
+<!--		            </span>-->
+<!--            </a>-->
+        </div>
+
+        <div class="oferta-head">
+
+            <div>
+                Data <span th:text="${#dates.format(oferta.edytowano, 'dd/MM/yyyy')}"></span>
+            </div>
+            <div>
+                Oferta Nr <span th:text="${oferta.id}"></span>
+            </div>
+
+        </div>
+        <div>
+            <h2>Kosztorys naprawy</h2>
+        </div>
+        <div class="samochod-ramka">
+            Dane pojazdu:
+            <div>
+                <a th:href="@{/pojazdy/{id}(id=${oferta.pojazd?.id})}">
+                    <p style="margin:0" th:text="${oferta.pojazd?.marka + ' ' + oferta.pojazd?.model + ' ' + oferta.pojazd?.numerRejestracyjny}"></p>
+                </a>
+            </div>
+            <div>
+                VIN <span th:text="${oferta.pojazd?.vin}"></span>
+            </div>
+            <div>
+                Przebieg <span th:text="${oferta.pojazd?.przebieg} ? ${oferta.pojazd?.przebieg} : ${oferta.przebieg}"></span>
+            </div>
+        </div>
+
+
+        <table class="table">
+            <thead class="thead-primary">
+            <tr>
+                <th width="60%">Opis</th>
+                <th>Cena robocizny (netto)</th>
+                <th>Cena części (brutto)</th>
+                <!--                <th>Usuń</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${oferta.elementySerwisowe}">
+                <td width="60%" th:text="${item.nazwa}"></td>
+                <td th:text="${item.cenaRobociznyNetto}"></td>
+                <td th:text="${item.cenaCzesciBrutto}"></td>
+                <!--                <td><a th:href="@{/oferty/{ofertaId}/elementy/usun/{id}(id=${item.id},ofertaId=${oferta.id})}">Usuń</a></td>-->
+            </tr>
+            </tbody>
+        </table>
+        <div class="forty-right">
+            <table class="table">
+                <tbody>
+                <tr style="border-top: 2px solid goldenrod;">
+                    <td th:text="${oferta.sumaRobociznaNetto}"></td>
+                    <td th:text="${oferta.sumaCzesciBrutto}"></td>
+                    <!--                    <td width="17%" ></td>-->
+                </tr>
+                </tbody>
+            </table>
+            <table class="table">
+                <tbody class="float-right">
+                <tr>
+                    <td th:text="${'Suma (netto) '+oferta.sumaBezVat + ' PLN'}"></td>
+                </tr>
+                <tr>
+                    <td th:text="${'Suma (brutto) '+oferta.suma+ ' PLN'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

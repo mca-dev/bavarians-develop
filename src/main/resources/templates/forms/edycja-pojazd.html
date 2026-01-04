@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<body>
+
+<div id="page" layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/pojazdy">Pojazdy</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edycja</li>
+        </ol>
+    </nav>
+        <form method="POST" class="form-signin" th:object="${pojazdForm}" th:action="@{/pojazdy/edytuj/{id}(id=${id})}">
+            <h2 class="form-signin-heading">Edytuj pojazd</h2>
+
+            <div class="form-group">
+                <input type="text" th:field="*{marka}" class="form-control" placeholder="Marka">
+            </div>
+            <div class="form-group">
+                <input type="text" th:field="*{model}" class="form-control" placeholder="Model">
+            </div>
+            <div class="form-group">
+                <input type="text" th:field="*{numerRejestracyjny}" class="form-control" placeholder="Numer Rejestracyjny" autofocus="true">
+            </div>
+            <div class="form-group">
+                <input type="text" th:field="*{vin}" class="form-control" placeholder="VIN">
+            </div>
+
+            <div class="form-group">
+                OC
+                <input type="date" th:field="*{terminOC}" pattern="yyyy-MM-dd"/>
+            </div>
+
+            <div class="form-group">
+                Badanie techniczne
+                <input type="date" th:field="*{terminBadania}" pattern="yyyy-MM-dd"/>
+            </div>
+
+            <div class="form-group">
+                Aktywne powiadomienia email:
+                <input type="checkbox" th:field="*{aktywnePowiadomienia}" class="form-control" placeholder="Aktywuj powiadomienia">
+            </div>
+            <div class="form-group">
+                Email do:
+                <input type="text" th:field="*{powiadomieniaEmail}" class="form-control" placeholder="Email do powiadomien">
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Wyślij</button>
+        </form>
+</div>
+</body>
+</html>
