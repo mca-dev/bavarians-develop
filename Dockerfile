@@ -4,12 +4,10 @@ WORKDIR /build
 
 # Copy all source files
 COPY pom.xml .
-COPY .mvn .mvn
-COPY mvnw .
 COPY src src
 
-# Build application
-RUN ./mvnw clean package -DskipTests
+# Build application using Maven directly (not mvnw)
+RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime
 FROM eclipse-temurin:11-jre-alpine
