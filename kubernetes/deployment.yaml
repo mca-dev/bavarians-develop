@@ -7,7 +7,7 @@ metadata:
     app: bavarians
     version: "3.0.7"
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -38,14 +38,14 @@ spec:
         - secretRef:
             name: bavarians-secrets
 
-        # Resource limits (adjust based on VPS capacity)
+        # Resource limits (adjusted for single-node VPS)
         resources:
           requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
             memory: "512Mi"
             cpu: "500m"
-          limits:
-            memory: "1Gi"
-            cpu: "1000m"
 
         # Liveness probe - restart if unhealthy
         livenessProbe:
