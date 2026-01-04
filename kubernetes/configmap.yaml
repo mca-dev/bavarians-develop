@@ -10,3 +10,6 @@ data:
   SERVER_PORT: "8080"
   SMTP_HOST: "smtp.cal.pl"
   SMTP_PORT: "587"
+  OLLAMA_BASE_URL: "http://ollama-service:11434"
+  CHATBOT_MARGIN_PERCENT: "30"
+  CHATBOT_LABOR_RATE_PLN: "150"
