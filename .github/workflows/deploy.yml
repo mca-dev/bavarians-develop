@@ -11,6 +11,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  VERSION: 3.0.${{ github.run_number }}
 
 jobs:
   test:
@@ -48,6 +49,11 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
+      - name: Update version in pom.xml
+        run: |
+          echo "Setting version to ${{ env.VERSION }}"
+          ./mvnw versions:set -DnewVersion=${{ env.VERSION }} -DgenerateBackupPoms=false
+
       - name: Build with Maven
         run: ./mvnw clean package -DskipTests
 
@@ -55,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: bavarians-jar
-          path: target/bavarians-3.0.7-SNAPSHOT.jar
+          path: target/bavarians-${{ env.VERSION }}.jar
           retention-days: 1
 
   docker-build:
@@ -84,8 +90,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=sha,prefix={{branch}}-
+            type=raw,value=${{ env.VERSION }}
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
@@ -156,9 +161,11 @@ jobs:
 
       - name: Deploy application
         run: |
-          IMAGE_TAG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          IMAGE_TAG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}"
+          echo "Deploying version ${{ env.VERSION }}"
           kubectl set image deployment/bavarians-app bavarians=$IMAGE_TAG -n bavarians-prod || true
           kubectl apply -f kubernetes/deployment.yaml
+          kubectl annotate deployment bavarians-app kubernetes.io/change-cause="Deploy version ${{ env.VERSION }}" -n bavarians-prod --overwrite
 
       - name: Wait for rollout
         run: |
@@ -178,4 +185,6 @@ jobs:
       - name: Deployment URL
         run: |
           echo "Application deployed successfully!"
-          echo "Access at: http://57.128.201.126:30080"
+          echo "Version: ${{ env.VERSION }}"
+          echo "Access at: https://www.bavarians.waw.pl"
+          echo "Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}"

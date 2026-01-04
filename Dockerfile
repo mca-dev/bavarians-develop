@@ -16,8 +16,8 @@ WORKDIR /app
 # Create non-root user for security
 RUN addgroup -S bavarians && adduser -S bavarians -G bavarians
 
-# Copy the built JAR from build stage
-COPY --from=build /build/target/bavarians-3.0.7-SNAPSHOT.jar app.jar
+# Copy the built JAR from build stage (matches any version)
+COPY --from=build /build/target/bavarians-*.jar app.jar
 
 # Change ownership to non-root user
 RUN chown bavarians:bavarians app.jar
