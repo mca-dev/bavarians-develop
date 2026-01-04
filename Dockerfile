@@ -2,16 +2,13 @@
 FROM maven:3.8-openjdk-11-slim AS build
 WORKDIR /build
 
-# Copy Maven wrapper and pom.xml first for better layer caching
+# Copy all source files
 COPY pom.xml .
 COPY .mvn .mvn
 COPY mvnw .
-
-# Download dependencies (cached layer)
-RUN ./mvnw dependency:go-offline -B
-
-# Copy source code and build
 COPY src src
+
+# Build application
 RUN ./mvnw clean package -DskipTests
 
 # Stage 2: Runtime
