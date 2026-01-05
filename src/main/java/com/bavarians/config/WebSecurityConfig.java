@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/css/**", "/img/**", "/js/**").permitAll()
                 .antMatchers("/api/auth/authenticate", "/api/auth/register").permitAll()
-                .antMatchers("/actuator/health").permitAll()
+                .antMatchers("/actuator/health/*").permitAll()
                 .antMatchers("/api/chatbot/**").authenticated()
                 .antMatchers("/klienci/**").hasRole("ADMIN")
                 .antMatchers("/plot/**").hasRole("ADMIN")
