@@ -1,6 +1,9 @@
 package com.bavarians.controller;
 
-import com.bavarians.graphql.model.*;
+import com.bavarians.graphql.model.Element;
+import com.bavarians.graphql.model.Oferta;
+import com.bavarians.graphql.model.Pojazd;
+import com.bavarians.graphql.model.Role;
 import com.bavarians.graphql.repository.ElementRepository;
 import com.bavarians.graphql.repository.KlientRepository;
 import com.bavarians.graphql.repository.PojazdRepository;
@@ -12,12 +15,15 @@ import com.itextpdf.text.DocumentException;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -26,13 +32,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static java.lang.String.format;
 
 @Controller
 @RequestMapping("oferty")
 public class OfertaController {
+
+    @Value("${pdf.temp.directory}")
+    private String pdfTempDirectory;
 
     @Autowired
     private OfertaService ofertaService;
@@ -174,7 +187,7 @@ public class OfertaController {
                 // elementRepository.saveAll(elementySerwisowe);
                 //o.setElementySerwisowe(elementySerwisowe);
                 //ofertaForm.setEdytowano(o.getEdytowano());
-                 ofertaService.recalculateAndSave(ofertaForm, elementySerwisowe);
+                ofertaService.recalculateAndSave(ofertaForm, elementySerwisowe);
 
             }
 
@@ -189,7 +202,7 @@ public class OfertaController {
         Optional<Oferta> oneWithPojazd = ofertaService.findById(id);
         try {
             if (oneWithPojazd.isPresent()) {
-                String filename = "/tmp/" + oneWithPojazd.map(this::getFilename).orElse("oferta-" + id);
+                String filename = pdfTempDirectory + "/" + oneWithPojazd.map(this::getFilename).orElse("oferta-" + id);
                 pdfCreator.createOfferPdf(filename, oneWithPojazd.get());
                 response.setContentType("application/pdf");
                 response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
@@ -199,8 +212,7 @@ public class OfertaController {
                     response.getWriter().write(nRead);
                 }
                 File file = new File(filename);
-                boolean delete = file.delete();
-                System.out.println(delete);
+                file.delete();
             }
 
         } catch (DocumentException | URISyntaxException e) {
@@ -221,7 +233,7 @@ public class OfertaController {
         Optional<Oferta> oferta = ofertaService.findById(id);
         try {
             if (oferta.isPresent()) {
-                String filename =  "/tmp/" + oferta.map(this::getFilename).orElse("oferta-" + id);
+                String filename = pdfTempDirectory + "/" + oferta.map(this::getFilename).orElse("oferta-" + id);
                 pdfCreator.createOfferPdf(filename, oferta.get());
                 response.setContentType("application/pdf");
                 response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));

@@ -37,7 +37,9 @@ spec:
             name: bavarians-config
         - secretRef:
             name: bavarians-secrets
-
+        env:
+          - name: PDF_TEMP_DIR
+            value: "/app/pdfs"
         # Resource limits (adjusted for single-node VPS)
         resources:
           requests:
@@ -69,14 +71,19 @@ spec:
 
         # Security context
         securityContext:
-          runAsNonRoot: false
+          runAsNonRoot: true
           runAsUser: 1000
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false  # Spring Boot needs temp dir
+        volumeMounts:
+          - name: pdf-temp
+            mountPath: /app/pdfs
 
       # Pull from GitHub Container Registry
       imagePullSecrets:
       - name: github-registry-secret
-
+      volumes:
+        - name: pdf-temp
+          emptyDir: { }
       # Restart policy
       restartPolicy: Always
