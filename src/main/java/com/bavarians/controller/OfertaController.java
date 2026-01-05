@@ -189,7 +189,7 @@ public class OfertaController {
         Optional<Oferta> oneWithPojazd = ofertaService.findById(id);
         try {
             if (oneWithPojazd.isPresent()) {
-                String filename = oneWithPojazd.map(this::getFilename).orElse("oferta-" + id);
+                String filename = "/tmp/" + oneWithPojazd.map(this::getFilename).orElse("oferta-" + id);
                 pdfCreator.createOfferPdf(filename, oneWithPojazd.get());
                 response.setContentType("application/pdf");
                 response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
@@ -221,7 +221,7 @@ public class OfertaController {
         Optional<Oferta> oferta = ofertaService.findById(id);
         try {
             if (oferta.isPresent()) {
-                String filename = oferta.map(this::getFilename).orElse("oferta-" + id);
+                String filename =  "/tmp/" + oferta.map(this::getFilename).orElse("oferta-" + id);
                 pdfCreator.createOfferPdf(filename, oferta.get());
                 response.setContentType("application/pdf");
                 response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
