@@ -159,21 +159,21 @@ jobs:
         run: |
           kubectl apply -f kubernetes/service.yaml
 
-#      - name: Deploy Ollama infrastructure
-#        run: |
-#          echo "Deploying Ollama LLM service..."
-#          kubectl apply -f kubernetes/ollama-pvc.yaml
-#          kubectl apply -f kubernetes/ollama-deployment.yaml
-#          kubectl apply -f kubernetes/ollama-service.yaml
-#          echo "Waiting for Ollama to be ready..."
-#          kubectl wait --for=condition=ready pod -l app=ollama -n bavarians-prod --timeout=180s || echo "Ollama not ready yet, continuing..."
-#
-#      - name: Download Ollama model
-#        run: |
-#          echo "Checking if PLLuM model needs to be downloaded..."
-#          kubectl delete job ollama-model-download -n bavarians-prod --ignore-not-found=true
-#          kubectl apply -f kubernetes/ollama-init-job.yaml
-#          echo "Model download job started (runs in background)"
+      - name: Deploy Ollama infrastructure
+        run: |
+          echo "Deploying Ollama LLM service..."
+          kubectl apply -f kubernetes/ollama-pvc.yaml
+          kubectl apply -f kubernetes/ollama-deployment.yaml
+          kubectl apply -f kubernetes/ollama-service.yaml
+          echo "Waiting for Ollama to be ready..."
+          kubectl wait --for=condition=ready pod -l app=ollama -n bavarians-prod --timeout=180s || echo "Ollama not ready yet, continuing..."
+
+      - name: Download Ollama model
+        run: |
+          echo "Checking if PLLuM model needs to be downloaded..."
+          kubectl delete job ollama-model-download -n bavarians-prod --ignore-not-found=true
+          kubectl apply -f kubernetes/ollama-init-job.yaml
+          echo "Model download job started (runs in background)"
 
       - name: Deploy application
         run: |
