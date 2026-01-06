@@ -16,6 +16,7 @@ spec:
       containers:
         - name: bavarians
           image: ghcr.io/mca-dev/bavarians-develop:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           envFrom:
