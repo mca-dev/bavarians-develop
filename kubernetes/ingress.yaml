@@ -4,33 +4,33 @@ metadata:
   name: bavarians-ingress
   namespace: bavarians-prod
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    traefik.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
+  ingressClassName: traefik
   tls:
-  - hosts:
-    - bavarians.waw.pl
-    - www.bavarians.waw.pl
-    secretName: bavarians-tls
+    - hosts:
+        - bavarians.waw.pl
+        - www.bavarians.waw.pl
+      secretName: bavarians-tls-cert
   rules:
-  - host: bavarians.waw.pl
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: bavarians-service
-            port:
-              number: 8080
-  - host: www.bavarians.waw.pl
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: bavarians-service
-            port:
-              number: 8080
+    - host: bavarians.waw.pl
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bavarians-service
+                port:
+                  number: 80
+    - host: www.bavarians.waw.pl
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bavarians-service
+                port:
+                  number: 80

@@ -159,6 +159,14 @@ jobs:
         run: |
           kubectl apply -f kubernetes/service.yaml
 
+      - name: Apply ClusterIssuer
+        run: |
+          kubectl apply -f kubernetes/cluster-issuer.yaml
+
+      - name: Apply Ingress
+        run: |
+          kubectl apply -f kubernetes/ingress.yaml
+
 #      - name: Deploy Ollama infrastructure
 #        run: |
 #          echo "Deploying Ollama LLM service..."

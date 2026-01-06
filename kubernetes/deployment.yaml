@@ -1,18 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bavarians-app
+  name: bavarians
   namespace: bavarians-prod
-  labels:
-    app: bavarians
-    version: "3.0.7"
 spec:
   replicas: 1
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0  # Zero-downtime deployments
   selector:
     matchLabels:
       app: bavarians
@@ -20,70 +12,39 @@ spec:
     metadata:
       labels:
         app: bavarians
-        version: "3.0.7"
     spec:
       containers:
-      - name: bavarians
-        image: ghcr.io/mca-dev/bavarians-develop:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8080
-          name: http
-          protocol: TCP
-
-        # Environment variables from ConfigMap and Secret
-        envFrom:
-        - configMapRef:
-            name: bavarians-config
-        - secretRef:
-            name: bavarians-secrets
-        env:
-          - name: PDF_TEMP_DIR
-            value: "/app/pdfs"
-        # Resource limits (adjusted for single-node VPS)
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "200m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-
-        # Health probes temporarily disabled due to authentication requirement
-        # TODO: Add Spring Boot Actuator and use /actuator/health endpoint
-        livenessProbe:
-           httpGet:
+        - name: bavarians
+          image: ghcr.io/mca-dev/bavarians-develop:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: bavarians-config
+            - secretRef:
+                name: bavarians-secrets
+          env:
+            - name: PDF_TEMP_DIR
+              value: "/app/pdfs"
+          # Resource limits (adjusted for single-node VPS)
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
               path: /actuator/health/liveness
               port: 8080
-           initialDelaySeconds: 90
-           periodSeconds: 10
-           timeoutSeconds: 5
-           failureThreshold: 3
-
-        readinessProbe:
-           httpGet:
-             path: /actuator/health/readiness
-             port: 8080
-           initialDelaySeconds: 30
-           periodSeconds: 5
-           timeoutSeconds: 3
-           failureThreshold: 3
-
-        # Security context
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: false  # Spring Boot needs temp dir
-        volumeMounts:
-          - name: pdf-temp
-            mountPath: /app/pdfs
-
-      # Pull from GitHub Container Registry
-      imagePullSecrets:
-      - name: github-registry-secret
-      volumes:
-        - name: pdf-temp
-          emptyDir: { }
-      # Restart policy
-      restartPolicy: Always
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 3
