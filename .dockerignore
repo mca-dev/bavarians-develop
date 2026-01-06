@@ -1,6 +1,8 @@
 # Build artifacts
-target/
-*.jar
+# target/ and *.jar - COMMENTED OUT: needed for CI/CD single-stage build
+# For local development with Dockerfile.local (multi-stage), these exclusions don't matter
+# target/
+# *.jar
 *.war
 *.ear
 
