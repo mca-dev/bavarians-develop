@@ -2,7 +2,7 @@
 # This Dockerfile expects a pre-built JAR file from GitHub Actions
 # For local development, use Dockerfile.local instead (builds JAR inside Docker)
 
-FROM openjdk:11-jre-slim
+FROM eclipse-temurin:11-jre-jammy
 
 WORKDIR /app
 
