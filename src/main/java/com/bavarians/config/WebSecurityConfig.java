@@ -65,6 +65,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .usernameParameter("email")
+                .passwordParameter("haslo")
                 .permitAll()
                 .and()
                 .logout()
