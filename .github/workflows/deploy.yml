@@ -31,7 +31,7 @@ jobs:
           cache: 'maven'
 
       - name: Run tests
-        run: ./mvnw test
+        run: mvn test
 
   build:
     name: Build Application
@@ -52,10 +52,10 @@ jobs:
       - name: Update version in pom.xml
         run: |
           echo "Setting version to ${{ env.VERSION }}"
-          ./mvnw versions:set -DnewVersion=${{ env.VERSION }} -DgenerateBackupPoms=false
+          mvn versions:set -DnewVersion=${{ env.VERSION }} -DgenerateBackupPoms=false
 
       - name: Build with Maven
-        run: ./mvnw clean package -DskipTests
+        run: mvn clean package -DskipTests
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
