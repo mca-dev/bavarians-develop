@@ -1,0 +1,39 @@
+# Multi-stage Dockerfile for local development
+# Usage: docker build -f Dockerfile.local -t bavarians:local .
+
+# Stage 1: Build with Maven
+FROM maven:3.8-openjdk-11-slim AS build
+WORKDIR /build
+
+# Copy dependency files first (better layer caching)
+COPY pom.xml .
+COPY mvnw .
+COPY .mvn .mvn
+
+# Download dependencies (cached layer if pom.xml unchanged)
+RUN ./mvnw dependency:go-offline -B
+
+# Copy source and build
+COPY src src
+RUN ./mvnw clean package -DskipTests
+
+# Stage 2: Runtime
+FROM eclipse-temurin:11-jre-alpine
+
+# Create non-root user for security
+RUN addgroup -S bavarians && adduser -S bavarians -G bavarians
+
+WORKDIR /app
+
+# Copy JAR from build stage
+COPY --from=build /build/target/bavarians-*.jar app.jar
+
+# Set ownership
+RUN chown bavarians:bavarians app.jar
+
+# Run as non-root
+USER bavarians
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
