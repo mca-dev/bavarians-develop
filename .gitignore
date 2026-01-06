@@ -1,6 +1,5 @@
-HELP.md
-cheatsheet.md
 target/
+docs_ignored/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

@@ -13,6 +13,8 @@ spec:
       labels:
         app: bavarians
     spec:
+      imagePullSecrets:
+        - name: github-registry-secret
       containers:
         - name: bavarians
           image: ghcr.io/mca-dev/bavarians-develop:latest
@@ -27,6 +29,9 @@ spec:
           env:
             - name: PDF_TEMP_DIR
               value: "/app/pdfs"
+          volumeMounts:
+            - name: pdf-temp
+              mountPath: /app/pdfs
           # Resource limits (adjusted for single-node VPS)
           resources:
             requests:
@@ -49,3 +54,6 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 5
             timeoutSeconds: 3
+      volumes:
+        - name: pdf-temp
+          emptyDir: {}
