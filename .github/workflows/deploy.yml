@@ -83,6 +83,14 @@ jobs:
           name: bavarians-jar
           path: target/
 
+      - name: List downloaded files
+        run: |
+          echo "Contents of target directory:"
+          ls -la target/
+          echo "Current directory:"
+          pwd
+          ls -la
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
